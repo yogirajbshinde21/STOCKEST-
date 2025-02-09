@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const OpenAI = require('openai');
 
 
 const { HoldingsModel } = require("./model/HoldingsModel");
@@ -13,7 +14,9 @@ const { OrdersModel } = require("./model/OrdersModel");
 
 const PORT = process.env.PORT || 3002;
 const uri = process.env.MONGO_URL;
-
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
 const app = express();
 
 app.use(cors());
@@ -400,6 +403,38 @@ app.post("/newSellOrder", async (req, res) => {
   }
 });
 
+
+// openAI Chat
+app.post("/api/chat", async (req, res) => {
+  try {
+    const { message } = req.body;
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: "You are a helpful assistant for Stockest, a stock trading platform focused on making trading accessible to rural areas. Only answer questions related to stock trading, investments, and the Stockest platform. Keep your responses focused on helping users understand trading concepts and using the Stockest platform safely."
+        },
+        {
+          role: "user",
+          content: message
+        }
+      ],
+      max_tokens: 500,
+      temperature: 0.7,
+    });
+
+    res.json({ 
+      message: completion.choices[0].message.content 
+    });
+  } catch (error) {
+    console.error('Error in chat endpoint:', error);
+    res.status(500).json({ 
+      error: 'Failed to get response from AI' 
+    });
+  }
+});
 
 
 // Fetch Orders Endpoint

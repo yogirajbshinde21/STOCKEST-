@@ -9,6 +9,7 @@ import AboutPage from "./landing_page/about/AboutPage";
 import ProductPage from "./landing_page/features/ProductPage";
 import BlogPage from "./landing_page/blog/BlogPage";
 import SupportPage from "./landing_page/support/SupportPage";
+import ChatbotPage from "./landing_page/chatbot/ChatbotPage";
 
 import NotFound from "./landing_page/NotFound";
 import Navbar from "./landing_page/Navbar";
@@ -26,6 +27,7 @@ root.render(
       <Route path="/blog" element={<BlogPage />} />
       <Route path="/support" element={<SupportPage />} />
       <Route path="*" element={<NotFound />} />
+      <Route path="/chatbot" element={<ChatbotPage />} />
     </Routes>
     <Footer />
   </BrowserRouter>
